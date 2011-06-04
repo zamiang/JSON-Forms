@@ -5,13 +5,11 @@
  * JSON -> Creator which returns a val function and the jquery object for that form
  * the val function calls client side validation and returns error text to be used by the jquery object AND returns 'ERROR'
  *
- * @author Brennan Moore brennan@jumo.com && matt
+ * @author Brennan Moore brennan@jumo.com
  * @requires jquery
- * @requires base.js
+ * @requires ../lib/util.js
  * 
  * compile script: java -jar compiler.jar --js=forms.src.js --js=forms_util.src.js --js_output_file=forms.js
- * 
- * todo -- namespace this under JUMO
  */
 
 /**
@@ -28,7 +26,7 @@
  * @note if there is only one formType it will not display tabs
  * 
  */
-var FormMaker = {
+JSONFORMS = {
     buildForms: function(formTabs, form, jObj) {
         var this_ = this;
         var forms = [];
