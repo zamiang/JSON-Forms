@@ -30,7 +30,7 @@ JSONFORMS.builder = {
         
         makeMultiLocationForm: function(formObj) {
             var this_ = this;
-            var orderedListModule = JUMO.Util.newify(OrderedList, formObj, jQuery("<div><ul></ul></div>"), false);    
+            var orderedListModule = newify(OrderedList, formObj, jQuery("<div><ul></ul></div>"), false);    
             var obj = FormMaker.getObj(orderedListModule, formObj.id, formObj.name, formObj.tip, formObj.help, formObj.hidden);
             
             obj.children().eq(1).append(jQuery('#templates .add').clone().click(
@@ -253,7 +253,7 @@ JSONFORMS.builder = {
 
             if (this.listType == 'multi_org_search') {
                 textJobj.html('<input type="text" style="width:70%" class=\"placeholder\" placeholder=\"enter the name of an org\" value="' + textJobj.text() + '" />');
-                JUMO.setupSearch(textJobj.find('input'), [], function(val){ textJobj.attr({'data-val': val.id }); }, this.section.restrictType);
+                JSONFORMS.setupSearch(textJobj.find('input'), [], function(val){ textJobj.attr({'data-val': val.id }); }, this.section.restrictType);
                 
             } else {
                 FormMaker.makeComboBox(textJobj, eval(this.listID.toUpperCase() + 'TAGSLIST'), val, this); 
@@ -353,18 +353,13 @@ JSONFORMS.builder = {
             this.jObj.find('.txt').each(function(index, div) {
                                             var val;
                                             var jObj = jQuery(div);
-
-                                            if (this_.listType == 'multi_org_search') {
-                                                val = jObj.attr('data-val'); //.length < 100 ? jObj.attr('data-val') : undefined;
-                                                
-                                            } else {   
-                                                if (jQuery(div).text() && JUMO.Util.trim(jQuery(div).text()).length > 1 && jQuery(div).text().length < 100) {
-                                                    val = {
-                                                        name:jQuery(div).text(),
-                                                        tag_rank:index + 1,
-                                                        type:this_.listID
-                                                    };
-                                                }
+                                            
+                                            if (jQuery(div).text() && JSONFORMS.Util.trim(jQuery(div).text()).length > 1 && jQuery(div).text().length < 100) {
+                                                val = {
+                                                    name:jQuery(div).text(),
+                                                    tag_rank:index + 1,
+                                                    type:this_.listID
+                                                };
                                             }
                                             
                                             if ((val && val !== this_.defaultText) && val !== jObj.attr('placeholder')) {

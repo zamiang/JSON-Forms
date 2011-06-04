@@ -39,7 +39,7 @@ JSONFORMS.checker = {
             return this.checkName(jObj, val, name, type, required);
 
         } else if (type == 'text') {
-            val = JUMO.Util.trim(val);
+            val = Util.trim(val);
             return this.checkText(jObj, val, name, type, required);
 
         } else if (type == 'tweet') {
@@ -235,7 +235,7 @@ JSONFORMS.checker = {
     },
     
     showParsedError: function(jObj, response) {
-        var text = JUMO.Util.getParsedErrorText(response);
+        var text = Util.getParsedErrorText(response);
         this.highlightDiv(jObj);
 
         return this.findNotificationDiv(jObj).slideDown(50).append(text + "<br />");
@@ -274,7 +274,7 @@ JSONFORMS.checker = {
     getLocationForString: function(str, cont, errorcont) {
         Placemaker.getPlaces(str, function(resp) {
                                  if (resp) {
-                                     if (!JUMO.Util.isArrayLike(resp)) {
+                                     if (!Util.isArrayLike(resp)) {
                                          resp = [resp];
                                      }
                                      cont(resp

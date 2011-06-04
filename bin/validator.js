@@ -28,7 +28,7 @@ JSONFORMS.validator = {
          * This script and many more are available free online at
          * The JavaScript Source!! http://javascript.internet.com
          *
-         * @author Brennan Moore (brennan@jumo.com) modified this to make it more readable
+         * @author Brennan Moore (brennanmoore@gmail.com) modified this to make it more readable
          *
          */
         
@@ -36,7 +36,7 @@ JSONFORMS.validator = {
         
         if (cardnum === undefined || cardnum.length < 1 || cardnum.length > 19) { return false; }
         
-        var revNum = JUMO.Util.reverse(String(cardnum));
+        var revNum = Util.reverse(String(cardnum));
         var total = 0;
         var temp = 0;
         var splitstring = "";
@@ -72,15 +72,15 @@ JSONFORMS.validator = {
     },
 
     isValidNumber: function(value){
-        return JUMO.Util.isNumeric(value);
+        return Util.isNumeric(value);
     },
     
     isValidFbid: function(value){
-        return JUMO.Util.isNumeric(value);
+        return Util.isNumeric(value);
     },                     
     
     isValidEINNumber: function(value){
-        return JUMO.Util.isNumeric(value) && String(value).length < 10 && String(value).length > 8;
+        return Util.isNumeric(value) && String(value).length < 10 && String(value).length > 8;
     },
 
     isValidInternationalNumber: function(value) {

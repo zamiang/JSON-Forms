@@ -57,9 +57,9 @@ JSONFORMS.helpers = {
         if (XMLHttpRequest && XMLHttpRequest.status == 404) {
             return;
         } else if (XMLHttpRequest && XMLHttpRequest.status == 502) {
-            JUMO.Modules.Popup.showErrorPopup('Error: you place an incorrectly formed request');
+            Modules.Popup.showErrorPopup('Error: you place an incorrectly formed request');
         } else {
-            JUMO.Modules.Popup.showErrorPopup('An unknown error has occured.');
+            Modules.Popup.showErrorPopup('An unknown error has occured.');
         }
     },
 

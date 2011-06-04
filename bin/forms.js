@@ -64,6 +64,70 @@ JSONFORMS = {
         return forms;
     },
 
+    setupSearch: function(jObj, items, cont, restrictType) {
+        var this_ = this;
+
+        if (!jObj || jObj.length < 1){ return; }
+
+        var placeholder = jObj.attr('placeholder');
+        jObj
+            .val(placeholder)
+            .focus(function(){
+                       if (jObj.val() == placeholder) {
+                           return jObj.val("").removeClass('placeholder');
+                       }
+                   })
+            .focusout(function(){
+                          if (jObj.val().length < 1) {
+                              jObj.val(placeholder).addClass('placeholder');
+                          }
+                      })
+            .autocomplete({
+                              source: function( request, continuation ) {
+                                  jQuery.get('/json/v1/search/onebox', {
+                              					 search: request.term,
+                              					 restrict_type: restrictType
+                              				 }, function(response) {
+                                                 this_.timesSearched = this_.timesSearched + 1;
+                                                 if (response && response.result) {
+                                                     return continuation(response.result);
+                                                 }
+                                                 return continuation([]);
+                                             }, false, function(){});
+                              },
+                              minLength: 2,
+                              open: function() {
+                                  jQuery(this).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+                              },
+                              close: function() {
+                                  jQuery(this).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+                              },
+                              /*
+                               search: function(){
+                               // this is the event that could trigger a 'no results' popup
+                               jQuery(this).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+                               },
+                               */
+                              select: function( event, ui ) {
+                                  ui.item.query = jObj.val();
+                                  jObj.val( ui.item.name );
+                                  cont(ui.item);
+                                  return false;
+                              }
+                          })
+            .data( "autocomplete" )._renderItem = function( ul, item ) {
+                if (item) {
+                    jQuery( "<li class=\"clearfix\"></li>" )
+                        .data( "item.autocomplete", item ) 
+                        .append(this_.getSearchHtmlForEntity(item))
+                        .appendTo( ul );
+                    return item;
+                }
+                return "";
+            };
+    },
+
+
     /**
      * takes the formObj and returns a form module
      *
@@ -141,7 +205,7 @@ JSONFORMS = {
     },
 
     makeStatisticsForm: function(formObj){
-        var module = JUMO.Util.newify(Accomplishment, jQuery('#templates .accomplishments').clone(), formObj.name, formObj.val, 'statistics');
+        var module = Util.newify(Accomplishment, jQuery('#templates .accomplishments').clone(), formObj.name, formObj.val, 'statistics');
 
         return {
             jObj: this.getObj(module, formObj.id, formObj.name, formObj.tip, formObj.help, formObj.hidden),
@@ -150,7 +214,7 @@ JSONFORMS = {
     },
 
     makeAccomplishmentsForm: function(formObj){
-        var module = JUMO.Util.newify(Accomplishment, jQuery('#templates .accomplishments').clone(), formObj.name, formObj.val);
+        var module = Util.newify(Accomplishment, jQuery('#templates .accomplishments').clone(), formObj.name, formObj.val);
 
         return {
             jObj: this.getObj(module, formObj.id, formObj.name, formObj.tip, formObj.help, formObj.hidden),
@@ -159,7 +223,7 @@ JSONFORMS = {
     },
 
     makeListForm: function(formObj){
-        var module = JUMO.Util.newify(OrderedList, formObj, jQuery("<div><ul></ul></div>"));
+        var module = Util.newify(OrderedList, formObj, jQuery("<div><ul></ul></div>"));
 
         return {
             jObj: this.getObj(module, formObj.id, formObj.name, formObj.tip, formObj.help, formObj.hidden),
@@ -180,10 +244,10 @@ JSONFORMS = {
             jObj = jQuery('#templates .text_form').clone();
             jObj.find('.editable').css({height:'94px'}).html(formObj.val);
             
-            JUMO.Util.makeCharCountDiv(jObj.find('.editable'), jObj.find('.tip'), max);
+            Util.makeCharCountDiv(jObj.find('.editable'), jObj.find('.tip'), max);
         } else {
             jObj = jQuery('#templates .tweet_form').clone();
-            jObj.find('input').val(JUMO.Util.trim(String(formObj.val)));
+            jObj.find('input').val(Util.trim(String(formObj.val)));
         }
 
         jObj.attr({ 'data-max': max });
@@ -251,10 +315,8 @@ JSONFORMS = {
 
         jObj = jQuery('#templates .tweet_form').clone();
 
-        // todo make this not reach into JUMO so abrubptly
-        // also why is setupsearch in jumo
         // @param 1: input div, 2: data, 3: continuation for selected val
-        JUMO.setupSearch(jObj.find('input'), [], function(val){ 
+        JSONFORMS.setupSearch(jObj.find('input'), [], function(val){ 
                              formObj['data-val'] = val.id;
                          }, formObj.restrictType);
 
@@ -273,7 +335,7 @@ JSONFORMS = {
     },
 
     makeMultiOrgSearchForm: function(formObj) {
-        var module = JUMO.Util.newify(OrderedList, formObj, jQuery("<div><ul></ul></div>"));
+        var module = Util.newify(OrderedList, formObj, jQuery("<div><ul></ul></div>"));
 
         return {
             jObj: this.getObj(module, formObj.id, formObj.name, formObj.tip, formObj.help, formObj.hidden),
@@ -337,8 +399,8 @@ JSONFORMS = {
         }
 
         editable.bind('focus unfocus', function(evt) {                          
-                      JUMO.Util.fixPlaceHolder(jQuery(this), evt.type);
-                  });
+                          Util.fixPlaceHolder(jQuery(this), evt.type);
+                      });
 
         return {
             jObj: jObj,
@@ -374,11 +436,11 @@ JSONFORMS = {
     },
 
     makeDependentSelectForm: function(formObj) {        
-        return JUMO.Util.newify(DependentSelect, formObj);
+        return Util.newify(DependentSelect, formObj);
     },
 
     makeMultiLocationForm: function(formObj) {        
-        return JUMO.Util.newify(MultiLocationForm, formObj);
+        return Util.newify(MultiLocationForm, formObj);
     },
 
     makeMultiSelect: function(formObj) {
@@ -511,14 +573,14 @@ JSONFORMS = {
             result += " (" + location.type + ")";
         }
         
-        return JUMO.Util.trim(result);
+        return Util.trim(result);
     },
 
     makeComboBox: function(jObj, vals, currentValue, parent){
         // append select boxes
         jObj.html("<select>" + vals.map(function(val) {return '<option value="val"' + (val == currentValue ? "selected" : "") + '>' + val + "</option>"; }) + "</select");
 
-        return JUMO.Util.newify(ComboBox, jObj, vals, currentValue, parent);
+        return Util.newify(ComboBox, jObj, vals, currentValue, parent);
     },
     
     // gets the jquery object from a ui module
