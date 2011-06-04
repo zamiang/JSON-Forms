@@ -1,0 +1,6 @@
+#+TITLE: JSON-Forms -- Client side rendered and validated HTML forms from JSON using jQuery
+#+KEYWORDS: javascript, js, html, json, jquery
+#+DESCRIPTION: A library that builds client side rendered and validated HTML forms from JSON using jQuery
+#+STYLE: <link rel="stylesheet" type="text/css" href="docstyle.css" />
+#+AUTHOR: Brennan Moore
+#+EMAIL: brennanmoore@gmail.com
